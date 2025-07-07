@@ -1,14 +1,15 @@
 from flask import Flask, jsonify
-from flask_cors import CORS
+from models.user_model import db
+from controllers.user_controller import user_api
+
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-
-#Allows request from any origin
-CORS(app)
-
-@app.route("/api/hello")
-def hello():
-    return jsonify({"message": "Hi from back!"})
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+db.init_app(app)
+app.register_blueprint(user_api)
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
